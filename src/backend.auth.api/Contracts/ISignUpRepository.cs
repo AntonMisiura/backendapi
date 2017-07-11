@@ -4,7 +4,7 @@ namespace backend.auth.api.Contracts
 {
     public interface ISignUpRepository
     {
-        void Save(User user);
+        void Create(User user);
 
         User FindByEmail(string email);
     }

@@ -97,10 +97,14 @@ namespace backend.auth.api
 
             app.UseFacebookAuthentication(new FacebookOptions
             {
-                AuthenticationScheme = "Facebook",
-                AppId = "YOUR_APP_ID",
-                AppSecret = "YOUR_APP_SECRET",
-                SignInScheme = "ApplicationCookie"
+                AppId = "720460194825623",
+                AppSecret = "6508ce6397d8e646274cef1be4e188d6"
+            });
+
+            app.UseGoogleAuthentication(new GoogleOptions()
+            {
+                ClientId = "27904284775-6riklo3mi99rumcvfmjmi9e8kgluqhuu.apps.googleusercontent.com",
+                ClientSecret = "2-F5X2SXGdwqlrBANp-RSV05"
             });
 
             app.UseApplicationInsightsRequestTelemetry();

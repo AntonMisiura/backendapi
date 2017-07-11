@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using backend.auth.api.Contracts;
@@ -9,14 +10,22 @@ namespace backend.auth.api.Security
 {
     public class GoogleLoginHandler : ILoginHandler
     {
+        public string AccessToken { get; set; }
         private const string GoogleApiTokenInfoUrl = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={0}";
-
-        public User GetUserDetails(string accessToken)
+        
+        public bool VerifyUserDetails(string email, string accessToken)
         {
+            var isValid = new EmailAddressAttribute().IsValid(email);
+
+            if (!isValid && string.IsNullOrEmpty(email))
+            {
+                //handle failure..
+            }
+
             var httpClient = new HttpClient();
             var requestUri = new Uri(string.Format(GoogleApiTokenInfoUrl, accessToken));
 
-            HttpResponseMessage httpResponseMessage;
+            HttpResponseMessage httpResponseMessage = null;
 
             try
             {
@@ -24,28 +33,41 @@ namespace backend.auth.api.Security
             }
             catch (Exception ex)
             {
-                return null;
+                //handle failure..
             }
 
-            if (httpResponseMessage.StatusCode != HttpStatusCode.OK)
+            if (httpResponseMessage == null && httpResponseMessage.StatusCode != HttpStatusCode.OK)
             {
-                return null;
+                //handle failure..
             }
 
             var response = httpResponseMessage.Content.ReadAsStringAsync().Result;
-            var googleApiTokenInfo = JsonConvert.DeserializeObject<GoogleApiTokenInfo>(response);
 
-            if (!SupportedClientsIds.Contains(googleApiTokenInfo.Aud))
-            {
-                //Logger:("Google API Token Info aud field ({0}) not containing the required client id", googleApiTokenInfo.aud);
-                return null;
-            }
+            return true;
+
+            //var googleApiTokenInfo = JsonConvert.DeserializeObject<GoogleApiTokenInfo>(response);
+
+            //if (googleApiTokenInfo == null)
+            //{
+            //    //hadle failure..
+            //}
+        }
+
+        public string LoginType => "google";
+
+        public User GetUser(string loginDataJson)
+        {
+            var googleResponse = JsonConvert.DeserializeObject<User>(loginDataJson);
+
+            VerifyUserDetails(googleResponse.Email, googleResponse.AccessToken);
 
             return new User
             {
-                Id = googleApiTokenInfo.Sub,
-                Email = googleApiTokenInfo.Email,
-                UserName = googleApiTokenInfo.Name
+                Id = 1,
+                Email = googleResponse.Email,
+                UserName = googleResponse.UserName,
+                AccessToken = googleResponse.AccessToken,
+                Password = googleResponse.Password
             };
         }
     }

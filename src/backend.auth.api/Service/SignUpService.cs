@@ -12,13 +12,13 @@ namespace backend.auth.api.Service
             _repository = repository;
         }
 
-        public User CreateUser(User user)
+        public User GetOrCreate(User user)
         {
             var dbUser = _repository.FindByEmail(user.Email);
 
             if (dbUser == null)
             {
-                _repository.Save(user);
+                _repository.Create(user);
                 return user;
             }
 

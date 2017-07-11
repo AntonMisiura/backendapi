@@ -23,7 +23,7 @@ namespace backend.auth.api.Controllers
         [HttpPost]
         public void CreateUser([FromBody]User user)
         {
-            _signUpService.CreateUser(user);
+            _signUpService.GetOrCreate(user);
         }
     }
 }

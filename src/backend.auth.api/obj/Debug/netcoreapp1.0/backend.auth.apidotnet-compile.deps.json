@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v1.0/",
-    "signature": "fbc139e8a34de7c67f79b0fbe5d875b5d2d75174"
+    "signature": "111bfc3d8c05d3a925b35961019520b3f792c2bf"
   },
   "compilationOptions": {
     "defines": [
@@ -40,7 +40,9 @@
           "System.Linq": "4.3.0",
           "Microsoft.EntityFrameworkCore.InMemory": "1.0.1",
           "Microsoft.IdentityModel.Tokens": "5.1.3",
-          "System.IdentityModel.Tokens.Jwt": "5.0.0"
+          "System.IdentityModel.Tokens.Jwt": "5.0.0",
+          "System.Net.Requests": "4.0.0",
+          "Microsoft.AspNetCore.Authentication.Google": "1.0.0"
         },
         "compile": {
           "backend.auth.api.dll": {}
@@ -158,6 +160,14 @@
         },
         "compile": {
           "lib/netstandard1.3/Microsoft.AspNetCore.Authentication.Facebook.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Google/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication.OAuth": "1.0.0"
+        },
+        "compile": {
+          "lib/netstandard1.3/Microsoft.AspNetCore.Authentication.Google.dll": {}
         }
       },
       "Microsoft.AspNetCore.Authentication.OAuth/1.0.0": {
@@ -1247,7 +1257,7 @@
           "System.Linq.Parallel": "4.0.1",
           "System.Linq.Queryable": "4.3.0",
           "System.Net.NameResolution": "4.0.0",
-          "System.Net.Requests": "4.0.11",
+          "System.Net.Requests": "4.0.0",
           "System.Net.Security": "4.0.0",
           "System.Net.WebHeaderCollection": "4.0.1",
           "System.Numerics.Vectors": "4.1.1",
@@ -2184,24 +2194,15 @@
           "ref/netstandard1.3/System.Net.Primitives.dll": {}
         }
       },
-      "System.Net.Requests/4.0.11": {
+      "System.Net.Requests/4.0.0": {
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "1.1.0",
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Diagnostics.Tracing": "4.3.0",
-          "System.Globalization": "4.3.0",
           "System.IO": "4.3.0",
-          "System.Net.Http": "4.3.0",
           "System.Net.Primitives": "4.3.0",
-          "System.Net.WebHeaderCollection": "4.0.1",
-          "System.Resources.ResourceManager": "4.3.0",
           "System.Runtime": "4.3.0",
-          "System.Threading": "4.3.0",
           "System.Threading.Tasks": "4.3.0"
         },
         "compile": {
-          "ref/netstandard1.3/System.Net.Requests.dll": {}
+          "ref/dotnet/System.Net.Requests.dll": {}
         }
       },
       "System.Net.Security/4.0.0": {
@@ -2969,7 +2970,9 @@
           "System.Linq": "4.3.0",
           "Microsoft.EntityFrameworkCore.InMemory": "1.0.1",
           "Microsoft.IdentityModel.Tokens": "5.1.3",
-          "System.IdentityModel.Tokens.Jwt": "5.0.0"
+          "System.IdentityModel.Tokens.Jwt": "5.0.0",
+          "System.Net.Requests": "4.0.0",
+          "Microsoft.AspNetCore.Authentication.Google": "1.0.0"
         },
         "runtime": {
           "backend.auth.api.dll": {}
@@ -3087,6 +3090,14 @@
         },
         "runtime": {
           "lib/netstandard1.3/Microsoft.AspNetCore.Authentication.Facebook.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Google/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication.OAuth": "1.0.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Microsoft.AspNetCore.Authentication.Google.dll": {}
         }
       },
       "Microsoft.AspNetCore.Authentication.OAuth/1.0.0": {
@@ -4176,7 +4187,7 @@
           "System.Linq.Parallel": "4.0.1",
           "System.Linq.Queryable": "4.3.0",
           "System.Net.NameResolution": "4.0.0",
-          "System.Net.Requests": "4.0.11",
+          "System.Net.Requests": "4.0.0",
           "System.Net.Security": "4.0.0",
           "System.Net.WebHeaderCollection": "4.0.1",
           "System.Numerics.Vectors": "4.1.1",
@@ -5044,20 +5055,11 @@
           "System.Runtime.Handles": "4.3.0"
         }
       },
-      "System.Net.Requests/4.0.11": {
+      "System.Net.Requests/4.0.0": {
         "dependencies": {
-          "Microsoft.NETCore.Platforms": "1.1.0",
-          "System.Collections": "4.3.0",
-          "System.Diagnostics.Debug": "4.3.0",
-          "System.Diagnostics.Tracing": "4.3.0",
-          "System.Globalization": "4.3.0",
           "System.IO": "4.3.0",
-          "System.Net.Http": "4.3.0",
           "System.Net.Primitives": "4.3.0",
-          "System.Net.WebHeaderCollection": "4.0.1",
-          "System.Resources.ResourceManager": "4.3.0",
           "System.Runtime": "4.3.0",
-          "System.Threading": "4.3.0",
           "System.Threading.Tasks": "4.3.0"
         }
       },
@@ -5794,6 +5796,11 @@
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-fhk2tzh5rL/dOtTx5iFmm0lTUsy3Plv8wojf+AWJSNfgp1M3XxKj7RmPu8O3fBuSECTB7mu68UDjsFPCV3v/QQ=="
+    },
+    "Microsoft.AspNetCore.Authentication.Google/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Y11elEMu4lP5qFnQ0UGbpe8d0uOlaT1KLkgDiRKpPvy1MqmtgPtVjqzvX9GG6+dJ187xY8N7Y1gWlTyAZh7rhg=="
     },
     "Microsoft.AspNetCore.Authentication.OAuth/1.0.0": {
       "type": "package",
@@ -6610,10 +6617,10 @@
       "serviceable": true,
       "sha512": "sha512-0UFHAlCWvsuKgcf4zRIUWWsZG+Ks37ToujAqNnX9Qf7RJrkPDNaCgSHjjVCeQKXikijA4na92x7q1+aGXXQdRQ=="
     },
-    "System.Net.Requests/4.0.11": {
+    "System.Net.Requests/4.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-vG6tMv+MLEejRtaHJRfvhP9WydtMjBb5k7Jw0AONOg1kVIKQZllVP69TTuduZe0JH4DUkBsarWNHyzll6GciFQ=="
+      "sha512": "sha512-LEbymGns/Q/lQnBRN/t/SgeLH5HjOsE9dCk+L+Nu0pzApot7ZIrgef2R2KeJyaLS8GgUIi+appJBUD0+GbHHTw=="
     },
     "System.Net.Security/4.0.0": {
       "type": "package",

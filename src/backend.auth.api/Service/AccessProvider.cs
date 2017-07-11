@@ -32,7 +32,7 @@ namespace backend.auth.api.Service
         }
 
 
-        //TODO: Make LoginHandler for facebook google and own, check data for valid if exist create jwt, create user in middlewareToken
+        //TODO: Make AllegroLoginHandler for facebook google and own, check data for valid if exist create jwt, create user in middlewareToken
         //Це буде інтерфейс ILoginHandler, і від нього будуть наслєдуватись FBLoginHandler, GoogleLoginHandler, OwnLoginHandler
         //в ньому буде перевірятись юзер на валідацію, в случаї гугла і фейсбука будуть перевірятись аксес токєни
         //а в случаї звичайної реєстрації будуть просто валідіруватись дані пользоватєля, потім в мідлвере я буду создавати юзера, і писати в базу за допомогою репозіторія

@@ -14,7 +14,7 @@ namespace backend.auth.api.Repo
             Context = context;
         }
 
-        public void Save(User user)
+        public void Create(User user)
         {
             if (user != null)
             {

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using backend.auth.api.Contracts;
-using backend.auth.api.Entities;
+using backend.auth.api.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -14,14 +15,23 @@ namespace backend.auth.api.Security.JWT
     public class TokenProviderMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILoginHandler[] _handlers;
+        private readonly ISignUpService _loginService;
         private readonly TokenProviderOptions _options;
 
-        public TokenProviderMiddleware(
-            RequestDelegate next,
-            IOptions<TokenProviderOptions> options)
+        public TokenProviderMiddleware(RequestDelegate next, IOptions<TokenProviderOptions> options,
+            ISignUpRepository repository)
         {
             _next = next;
             _options = options.Value;
+            _loginService = new SignUpService(repository);
+            _handlers = new ILoginHandler[]
+            {
+                new AllegroLoginHandler(),
+                new FacebookLoginHandler(),
+                new GoogleLoginHandler()   
+            };
+
         }
 
         public Task Invoke(HttpContext context)
@@ -45,11 +55,20 @@ namespace backend.auth.api.Security.JWT
 
         private async Task GenerateToken(HttpContext context)
         {
-            var username = context.Request.Form["username"];
+            var email = context.Request.Form["email"];
             var password = context.Request.Form["password"];
+            var loginType = context.Request.Form["logintype"];
+            var loginData = context.Request.Form["logindata"];
 
-            var identity = await GetIdentity(username, password);
-            if (identity == null)
+            var loginHandler = _handlers.FirstOrDefault(h => h.LoginType == loginType);
+            // bad request if handler null
+            
+            var user = loginHandler.GetUser(loginData);
+
+            //TODO:verify token, email or user data
+            var dbUser = _loginService.GetOrCreate(user);
+
+            if (dbUser == null)
             {
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync("Invalid username or password.");
@@ -62,9 +81,13 @@ namespace backend.auth.api.Security.JWT
             // You can add other claims here, if you want:
             var claims = new Claim[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, username),
+                // Mandatory
+                new Claim(JwtRegisteredClaimNames.Sub, dbUser.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, now.ToUniversalTime().ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64)
+                new Claim(JwtRegisteredClaimNames.Iat, now.ToUniversalTime().ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64),
+
+                // My claims
+                new Claim("AlegroUserName", dbUser.UserName)
             };
 
             // Create the JWT and write it to a string
@@ -88,40 +111,16 @@ namespace backend.auth.api.Security.JWT
             await context.Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
-        private Task<ClaimsIdentity> GetIdentity(string email, string password)
-        {
-            // DON'T do this in production, obviously!
-            if (email == "TestUsername" && password == "TESTPassword123")
-            {
-                return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(email, "Token"), new Claim[] { }));
-            }
+        //private Task<ClaimsIdentity> GetIdentity(string email, string password)
+        //{
+        //    // DON'T do this in production, obviously!
+        //    if (email == "TestUsername" && password == "TESTPassword123")
+        //    {
+        //        return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(email, "Token"), new Claim[] { }));
+        //    }
 
-            // Credentials are invalid, or account doesn't exist
-            return Task.FromResult<ClaimsIdentity>(null);
-        }
-
-        private Task<ClaimsIdentity> GetFacebookIdentity(string email, string accessToken)
-        {
-            // DON'T do this in production, obviously!
-            if (email == "TestUsername" && accessToken == "TESTPassword123")
-            {
-                return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(email, "Token"), new Claim[] { }));
-            }
-
-            // Credentials are invalid, or account doesn't exist
-            return Task.FromResult<ClaimsIdentity>(null);
-        }
-
-        private Task<ClaimsIdentity> GetGoogleIdentity(string email, FacebookResponse accessToken)
-        {
-            // DON'T do this in production, obviously!
-            if (email == "TestUsername" && accessToken == null)
-            {
-                return Task.FromResult(new ClaimsIdentity(new System.Security.Principal.GenericIdentity(email, "Token"), new Claim[] { }));
-            }
-
-            // Credentials are invalid, or account doesn't exist
-            return Task.FromResult<ClaimsIdentity>(null);
-        }
+        //    // Credentials are invalid, or account doesn't exist
+        //    return Task.FromResult<ClaimsIdentity>(null);
+        //}
     }
 }

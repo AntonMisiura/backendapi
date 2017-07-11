@@ -8,16 +8,12 @@ namespace backend.auth.api.Security
         {
             switch (loginType)
             {
-                case "Login":
-                    return new LoginHandler();
-
-                case "FacebookLogin":
+                case "facebook":
                     return new FacebookLoginHandler();
-
-                case "GoogleLogin":
+                case "google":
                     return new GoogleLoginHandler();
-
-                default: return new LoginHandler();
+                default:
+                    return new AllegroLoginHandler();
             }
         }
     }
